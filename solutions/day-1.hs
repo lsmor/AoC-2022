@@ -1,4 +1,5 @@
 module Main where
+  
 import System.Environment (getArgs)
 import qualified Data.ByteString.Char8 as C
 import qualified Data.ByteString as BS
