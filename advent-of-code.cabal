@@ -30,6 +30,7 @@ common deps
     , containers
     , matrix
     , vector
+    , split
   other-modules:
       Paths_advent_of_code
   default-language: Haskell2010
@@ -40,3 +41,9 @@ executable day-1
   hs-source-dirs:
       solutions
   main-is: day-1.hs
+
+executable day-2
+  import: deps
+  main-is: day-2.hs
+  hs-source-dirs:
+      solutions
