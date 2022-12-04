@@ -10,15 +10,10 @@ import qualified Data.Attoparsec.ByteString.Char8 as P
 import qualified Data.ByteString as BS
 
 parseIntervals :: Parser IntegerInterval
-parseIntervals = (<=..<=)
-             <$> (Finite <$> P.decimal)
-             <*> (P.char '-' >> Finite <$> P.decimal)
-
+parseIntervals = (<=..<=) <$> (Finite <$> P.decimal) <*> (P.char '-' >> Finite <$> P.decimal)
 
 parseIntervalPair :: Parser (IntegerInterval, IntegerInterval)
-parseIntervalPair = (,)
-                <$> parseIntervals
-                <*> (P.char ',' >> parseIntervals)
+parseIntervalPair = (,) <$> parseIntervals <*> (P.char ',' >> parseIntervals)
 
 parseInput :: Parser [(IntegerInterval, IntegerInterval)]
 parseInput = parseIntervalPair `P.sepBy` P.endOfLine
@@ -38,16 +33,11 @@ wasted i j =
 wastedWithOverlap :: IntegerInterval -> IntegerInterval -> Bool
 wastedWithOverlap i j =
   case i `relate` j of
-    Starts -> True
-    During -> True
-    Finishes -> True
-    Equal -> True
-    StartedBy -> True
-    Contains -> True
-    FinishedBy -> True
-    OverlappedBy -> True
-    Overlaps -> True
-    _ -> False
+    Before -> False
+    JustBefore -> False
+    After -> False
+    JustAfter -> False
+    _ -> True
 
 main :: IO ()
 main = do
