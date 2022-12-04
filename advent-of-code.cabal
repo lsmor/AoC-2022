@@ -48,9 +48,16 @@ executable day-2
   main-is: day-2.hs
   hs-source-dirs:
       solutions
+
 executable day-3
   import: deps
   main-is: day-3.hs
+  hs-source-dirs:
+      solutions
+
+executable day-4
+  import: deps
+  main-is: day-4.hs
   hs-source-dirs:
       solutions
 
