@@ -32,6 +32,8 @@ common deps
     , matrix
     , vector
     , split
+    , data-interval
+    , extended-reals
   other-modules:
       Paths_advent_of_code
   default-language: Haskell2010
