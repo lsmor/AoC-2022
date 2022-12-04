@@ -2,8 +2,9 @@ module Main where
 
 import System.Environment (getArgs)
 import Data.IntegerInterval
+    ( relate, (<=..<=), IntegerInterval, Extended(Finite) )
 import Data.IntervalRelation
-import Data.ExtendedReal
+    ( Relation(..) )
 import Data.Attoparsec.ByteString.Char8 (Parser)
 import qualified Data.Attoparsec.ByteString.Char8 as P
 import qualified Data.ByteString as BS
