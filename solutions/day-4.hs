@@ -2,12 +2,13 @@ module Main where
 
 import System.Environment (getArgs)
 import Data.IntegerInterval
-    ( relate, (<=..<=), IntegerInterval, Extended(Finite) )
+    ( relate, (<=..<=), IntegerInterval, Extended(Finite), isSubsetOf, isConnected, (==?), intersection, null )
 import Data.IntervalRelation
     ( Relation(..) )
 import Data.Attoparsec.ByteString.Char8 (Parser)
 import qualified Data.Attoparsec.ByteString.Char8 as P
 import qualified Data.ByteString as BS
+import Prelude hiding (null)
 
 parseIntervals :: Parser IntegerInterval
 parseIntervals = (<=..<=) <$> (Finite <$> P.decimal) <*> (P.char '-' >> Finite <$> P.decimal)
@@ -19,25 +20,10 @@ parseInput :: Parser [(IntegerInterval, IntegerInterval)]
 parseInput = parseIntervalPair `P.sepBy` P.endOfLine
 
 wasted :: IntegerInterval -> IntegerInterval -> Bool
-wasted i j =
-  case i `relate` j of
-    Starts -> True
-    During -> True
-    Finishes -> True
-    Equal -> True
-    StartedBy -> True
-    Contains -> True
-    FinishedBy -> True
-    _ -> False
+wasted i j = i `isSubsetOf` j || j `isSubsetOf` i
 
 wastedWithOverlap :: IntegerInterval -> IntegerInterval -> Bool
-wastedWithOverlap i j =
-  case i `relate` j of
-    Before -> False
-    JustBefore -> False
-    After -> False
-    JustAfter -> False
-    _ -> True
+wastedWithOverlap = (==?)
 
 main :: IO ()
 main = do
@@ -46,8 +32,8 @@ main = do
   if read @Int part == 1
     then do
       print "solution to problem 1 is:"
-      print $ sum . fmap (fromEnum . uncurry wasted) <$> P.parseOnly parseInput input 
+      print $ sum . fmap (fromEnum . uncurry wasted) <$> P.parseOnly parseInput input
     else do
       print "solution to problem 2 is:"
-      print $ sum . fmap (fromEnum . uncurry wastedWithOverlap) <$> P.parseOnly parseInput input 
+      print $ sum . fmap (fromEnum . uncurry wastedWithOverlap) <$> P.parseOnly parseInput input
 
