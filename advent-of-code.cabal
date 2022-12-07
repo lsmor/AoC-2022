@@ -33,6 +33,8 @@ common deps
     , vector
     , split
     , data-interval
+  hs-source-dirs:
+      solutions
   other-modules:
       Paths_advent_of_code
   default-language: Haskell2010
@@ -40,26 +42,17 @@ common deps
 
 executable day-1
   import: deps
-  hs-source-dirs:
-      solutions
   main-is: day-1.hs
 
 executable day-2
   import: deps
   main-is: day-2.hs
-  hs-source-dirs:
-      solutions
 
 executable day-3
   import: deps
   main-is: day-3.hs
-  hs-source-dirs:
-      solutions
 
 executable day-4
   import: deps
   main-is: day-4.hs
-  hs-source-dirs:
-      solutions
-
 

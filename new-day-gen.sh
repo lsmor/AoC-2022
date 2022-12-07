@@ -22,8 +22,6 @@ main = do
 cabal_day="executable ${d}
   import: deps
   main-is: ${d}.hs
-  hs-source-dirs:
-      solutions
 
 "
 
