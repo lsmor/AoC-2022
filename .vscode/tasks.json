@@ -16,6 +16,16 @@
             ],
             "group": "none",
             "problemMatcher": []
+        },
+        { 
+            "label": "build proyect",
+            "type":"process",
+            "command": "cabal",
+            "args": ["build"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         }
     ],
     "inputs": [

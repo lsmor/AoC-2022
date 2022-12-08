@@ -24,6 +24,7 @@ common deps
       TupleSections
       StrictData
       OverloadedRecordDot
+      ImportQualifiedPost
   build-depends:
       attoparsec
     , base >=4.7 && <5
@@ -33,6 +34,7 @@ common deps
     , vector
     , split
     , data-interval
+    , mtl
   hs-source-dirs:
       solutions
   other-modules:
@@ -55,4 +57,8 @@ executable day-3
 executable day-4
   import: deps
   main-is: day-4.hs
+
+executable day-5
+  import: deps
+  main-is: day-5.hs
 
