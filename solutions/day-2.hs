@@ -1,3 +1,4 @@
+{-# LANGUAGE RecordWildCards #-}
 module Main where
 
 import qualified Data.Attoparsec.ByteString.Char8 as P
@@ -35,10 +36,10 @@ outputToPoints Draw  = 3
 outputToPoints Loose = 0
 
 strategyToPoint :: GameStrategy GameChoice -> Int
-strategyToPoint s = choiceToPoints s.player + outputToPoints (s.player `beats` s.opponent)
+strategyToPoint GameStrategy {..} = choiceToPoints player + outputToPoints (player `beats` opponent)
 
 strategyResolve :: GameStrategy GameOutput -> GameStrategy GameChoice
-strategyResolve s = s{player = s.opponent `needs` s.player}
+strategyResolve s@GameStrategy {..} = s{player = opponent `needs` player}
 
 parseGameChoice :: P.Parser GameChoice
 parseGameChoice = Rock     <$ (P.char 'A' <|> P.char 'X')
@@ -81,7 +82,7 @@ main = do
       print "solution to problem 1 is:"
       print $ P.parseOnly (sum . fmap strategyToPoint <$> parseInput) input
     else do
-      print "solution to problem 2 is:" 
+      print "solution to problem 2 is:"
       print $ P.parseOnly (sum . fmap (strategyToPoint . strategyResolve) <$> parseInput') input
 
 

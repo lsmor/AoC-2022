@@ -1,4 +1,4 @@
-cabal-version: 3.8
+cabal-version: 3.6
 
 name:           advent-of-code
 version:        0.1.0.0
@@ -23,8 +23,8 @@ common deps
       LambdaCase
       TupleSections
       StrictData
-      OverloadedRecordDot
       ImportQualifiedPost
+      RecordWildCards
   build-depends:
       attoparsec
     , base >=4.7 && <5
@@ -65,5 +65,10 @@ executable day-5
 executable day-6
   import: deps
   main-is: day-6.hs
+
+
+executable day-7
+  import: deps
+  main-is: day-7.hs
 
 

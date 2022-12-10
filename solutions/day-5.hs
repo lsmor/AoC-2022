@@ -1,5 +1,6 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# HLINT ignore "Eta reduce" #-}
+{-# LANGUAGE RecordWildCards #-}
 module Main where
 
 import System.Environment (getArgs)
@@ -28,18 +29,18 @@ push [] s = s
 push (x:xs) stack = push xs (x:stack)
 
 rearrange :: Move -> Rearrangement ()
-rearrange move = do
-  crate <- gets (! move.from)
-  let pulled = pull move.many crate
-  modify $ M.adjust (drop move.many) move.from
-  modify $ M.adjust (push pulled)    move.to
+rearrange Move {..} = do
+  crate <- gets (! from)
+  let pulled = pull many crate
+  modify $ M.adjust (drop many) from
+  modify $ M.adjust (push pulled) to
 
 rearrange' :: Move -> Rearrangement ()
-rearrange' move = do
-  crate <- gets (! move.from)
-  let pulled = pull move.many crate
-  modify $ M.adjust (drop move.many) move.from
-  modify $ M.adjust (pulled ++) move.to
+rearrange' Move {..} = do
+  crate <- gets (! from)
+  let pulled = pull many crate
+  modify $ M.adjust (drop many) from
+  modify $ M.adjust (pulled ++) to
 
 run :: [Move] -> Supplies -> Supplies
 run moves sups = execState (traverse_ rearrange moves) sups
