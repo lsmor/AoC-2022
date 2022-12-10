@@ -100,7 +100,7 @@ main = do
   if read @Int part == 1
     then do
       print "solution to problem 1 is:"
-      print $ sum . filter (<= 100000) . fmap snd . calculateDirSize <$> fs
+      print $ sum . filter (<= 100_000) . fmap snd . calculateDirSize <$> fs
     else do
       print "solution to problem 2 is:"
       let Right folder_spaces = calculateDirSize <$> fs

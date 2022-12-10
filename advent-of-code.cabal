@@ -72,3 +72,8 @@ executable day-7
   main-is: day-7.hs
 
 
+executable day-8
+  import: deps
+  main-is: day-8.hs
+
+
