@@ -1,6 +1,7 @@
 {-# LANGUAGE DeriveFoldable #-}
 {-# LANGUAGE DeriveFunctor #-}
 {-# OPTIONS_GHC -Wno-incomplete-patterns #-}
+{-# LANGUAGE NumericUnderscores #-}
 
 module Main where
 
@@ -78,7 +79,7 @@ buildFileSystem (ChangeDir "/" : cs) = go ["/"] (Dir "/" []) cs
   go visited_dirs fileSystem (ChangeDir ".." : commands) = go (tail visited_dirs) fileSystem commands
   go visited_dirs fileSystem (ChangeDir name : commands) =
       let current_path = BS.intercalate "/" $ reverse visited_dirs
-          dir_path     = current_path <> "/" <> name 
+          dir_path     = current_path <> "/" <> name
           new_fs       = setDirectories [Dir dir_path []] current_path fileSystem
       in go (name : visited_dirs) new_fs commands
 
@@ -94,12 +95,16 @@ main = do
   input <- BS.readFile filepath
   let commands = P.parseOnly parseInput input
       fs = buildFileSystem <$> commands
+      required_space = 30_000_000
+      total_space    = 70_000_000
   if read @Int part == 1
     then do
       print "solution to problem 1 is:"
       print $ sum . filter (<= 100000) . fmap snd . calculateDirSize <$> fs
-      -- print $ commands
-      -- print $ fs
     else do
       print "solution to problem 2 is:"
-      print "not implemented"
+      let Right folder_spaces = calculateDirSize <$> fs
+          Just  occupied_space = lookup "/" folder_spaces
+          unused_space = total_space - occupied_space
+          min_to_delete = required_space - unused_space
+      print $ minimum . filter (>= min_to_delete) . fmap snd . calculateDirSize <$> fs
