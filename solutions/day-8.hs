@@ -36,17 +36,6 @@ sceneScore m = M.mapPos f m
             slide_bottom = fst . left  (r < nrows) $ M.submatrix (r+1) nrows c     c     m
          in slide_left * slide_right * slide_top * slide_bottom
 
--- >>> foldr mod 9 $ M.submatrix 3 5 2 2 $ M.fromLists [[1 :: Int,2,3],[4,5,6],[7,8,9]]
--- submatrix: ending row (5) is out of range. Matrix has 3 rows, and starting row is 3.
-
-
--- >>> let f n c (count, continue) = let new_continue = (c < n) && continue in (count + fromEnum continue, new_continue)  in foldr ( f 3) (0 :: Int, True) [3,2,1]
--- (3,False)
-
--- >>> mod 5 8 
--- 5
-
-
 main :: IO ()
 main = do
   [part, filepath] <- getArgs
