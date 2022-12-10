@@ -13,7 +13,6 @@ import Data.Foldable (Foldable (..))
 import Data.Map (Map)
 import Data.Map.Strict qualified as M
 import Data.Monoid (Sum (..))
-import Debug.Trace (trace)
 import System.Environment (getArgs)
 import Data.Function (on)
 import Data.List (find)
@@ -48,10 +47,14 @@ getName :: FileSystem a -> Name
 getName (File bs _) = bs
 getName (Dir bs _) = bs
 
+makeFullPath :: ByteString -> FileSystem a -> FileSystem a
+makeFullPath bs (File bs' a)  = File (bs <> "/" <> bs') a
+makeFullPath bs (Dir bs' fss) = Dir (bs <> "/" <> bs') fss
+
 mergeDirs :: [FileSystem a] -> [FileSystem a] -> [FileSystem a]
 mergeDirs [] [] = []
 mergeDirs [] xs = xs
-mergeDirs (e : fs) xs = 
+mergeDirs (e : fs) xs =
   case find ((lookup_name ==) . getName) xs of
     Nothing -> e:mergeDirs fs xs
     Just _  -> mergeDirs fs xs
@@ -66,16 +69,18 @@ setDirectories dirs lookup_name (Dir n sub_tree)
 buildFileSystem :: [Command] -> FileSystem Size
 buildFileSystem (ChangeDir "/" : cs) = go ["/"] (Dir "/" []) cs
  where
-  go visited_dirs fileSystem [] = trace "finish" fileSystem
+  go visited_dirs fileSystem [] = fileSystem
   go visited_dirs fileSystem (ListDir r : commands) =
-    let current_dir = head visited_dirs
-        new_fs      = setDirectories r current_dir fileSystem
-     in trace ("ls: "<> show new_fs) $ go visited_dirs new_fs commands
-  go visited_dirs fileSystem (ChangeDir ".." : commands) = trace ("cd up: "<> show fileSystem) $ go (tail visited_dirs) fileSystem commands
+    let current_path = BS.intercalate "/" $ reverse visited_dirs
+        full_folder = makeFullPath current_path <$> r
+        new_fs      = setDirectories full_folder current_path fileSystem
+     in go visited_dirs new_fs commands
+  go visited_dirs fileSystem (ChangeDir ".." : commands) = go (tail visited_dirs) fileSystem commands
   go visited_dirs fileSystem (ChangeDir name : commands) =
-      let current_dir = head visited_dirs
-          new_fs      = setDirectories [Dir name []] current_dir fileSystem
-      in trace ("cd " <> show name <> ": "<> show new_fs) $ go (name : visited_dirs) new_fs commands
+      let current_path = BS.intercalate "/" $ reverse visited_dirs
+          dir_path     = current_path <> "/" <> name 
+          new_fs       = setDirectories [Dir dir_path []] current_path fileSystem
+      in go (name : visited_dirs) new_fs commands
 
 calculateDirSize :: FileSystem Size -> [(Name, Size)]
 calculateDirSize (File _ _) = []
