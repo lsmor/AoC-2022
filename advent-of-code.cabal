@@ -34,6 +34,7 @@ common deps
     , vector
     , split
     , data-interval
+    , search-algorithms
     , mtl
   hs-source-dirs:
       solutions
@@ -90,5 +91,10 @@ executable day-10
 executable day-11
   import: deps
   main-is: day-11.hs
+
+
+executable day-12
+  import: deps
+  main-is: day-12.hs
 
 
