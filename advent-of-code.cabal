@@ -103,3 +103,8 @@ executable day-13
   main-is: day-13.hs
 
 
+executable day-14
+  import: deps
+  main-is: day-14.hs
+
+
